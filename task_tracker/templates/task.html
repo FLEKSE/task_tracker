@@ -37,10 +37,10 @@
         <p>{{ task.task_name }} (Текущий статус: {{ task.get_status_display }})</p>
 
         <!-- Форма для изменения статуса задачи -->
-        <form method="POST" action="{% url 'change_task_status' task_id=task.task_id %}">
+        <form method="POST" action="{% url 'change_task_status' task_id=task.task_id %}" id="form-status-{{ task.task_id }}">
             {% csrf_token %}
             <label for="status">Изменить статус:</label>
-            <select id="status" name="status">
+            <select id="status-{{ task.task_id }}" name="status" onchange="document.getElementById('form-status-{{ task.task_id }}').submit();">
                 <option value="created" {% if task.status == 'created' %}selected{% endif %}>Создана</option>
                 <option value="analysis" {% if task.status == 'analysis' %}selected{% endif %}>Анализируется</option>
                 <option value="in_process" {% if task.status == 'in_process' %}selected{% endif %}>В работе</option>
@@ -48,9 +48,9 @@
                 <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Выполнена</option>
                 <option value="paused" {% if task.status == 'paused' %}selected{% endif %}>Приостановлена</option>
             </select>
-            <button type="submit">Изменить статус</button>
         </form>
     </div>
     {% endfor %}
+
 </body>
 </html>

@@ -6,10 +6,29 @@
 </head>
 <body>
     <h1>Список проектов</h1>
+
+    <a href="{% url 'create_project' %}">
+        <button>Создать новый проект</button>
+    </a>
+
     {% for el in projects %}
     <div class="projects_list">
-        <a href="{% url 'task_view' project_id=el.project_id %}">{{ el.name }}</a>
-        <p>{{ el.status }}</p>
+        <h2>{{ el.name }}</h2>
+
+        <form method="POST" action="{% url 'change_project_status' project_id=el.project_id %}" id="form-status-{{ el.project_id }}">
+            {% csrf_token %}
+            <label for="status">Статус проекта:</label>
+            <select id="status-{{ el.project_id }}" name="status" onchange="document.getElementById('form-status-{{ el.project_id }}').submit();">
+                <option value="in_process" {% if el.status == 'in_process' %}selected{% endif %}>В процессе</option>
+                <option value="paused" {% if el.status == 'paused' %}selected{% endif %}>Приостановлен</option>
+                <option value="finished" {% if el.status == 'finished' %}selected{% endif %}>Завершен</option>
+                <option value="on_check" {% if el.status == 'on_check' %}selected{% endif %}>На проверке</option>
+                <option value="canceled" {% if el.status == 'canceled' %}selected{% endif %}>Отменен</option>
+            </select>
+        </form>
+
+        <a href="{% url 'task_view' project_id=el.project_id %}">Перейти к задачам</a>
+        <p>Статус: {{ el.get_status_display }}</p>
     </div>
     {% endfor %}
 </body>

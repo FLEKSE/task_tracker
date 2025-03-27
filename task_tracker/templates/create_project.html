@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание нового проекта</title>
+</head>
+<body>
+    <h1>Создание нового проекта</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Создать проект</button>
+    </form>
+    <br>
+    <a href="{% url 'projects' %}">Назад к проектам</a>
+</body>
+</html>
