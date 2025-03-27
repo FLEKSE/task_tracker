@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
-
 
 class Project(models.Model):
     STATUS_CHOICES = [
@@ -47,7 +45,10 @@ class UnderTask(models.Model):
     under_task_id = models.AutoField(primary_key=True)
     text = models.TextField()
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='under_task', null=True, blank=True)
-    status = models.BooleanField()  # передать туда тру или фолс для добавления галочки
+    status = models.BooleanField()  # передать True или False для добавления галочки
+
+    def __str__(self):
+        return f"UnderTask {self.under_task_id} for {self.task.task_name}"
 
 
 class CustomUser(AbstractUser):

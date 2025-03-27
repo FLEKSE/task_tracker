@@ -1,0 +1,56 @@
+<!-- task.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задачи</title>
+</head>
+<body>
+    <h1>Задачи для проекта: {{ project.name }}</h1>
+
+    <!-- Форма для добавления задачи -->
+    <h2>Добавить задачу</h2>
+    <form method="POST" action="{% url 'task_view' project_id=project.project_id %}">
+        {% csrf_token %}
+        <label for="task_name">Название задачи:</label>
+        <input type="text" id="task_name" name="task_name" required>
+
+        <label for="status">Статус:</label>
+        <select id="status" name="status">
+            <option value="created">Создана</option>
+            <option value="analysis">Анализируется</option>
+            <option value="in_process">В работе</option>
+            <option value="canceled">Отменена</option>
+            <option value="completed">Выполнена</option>
+            <option value="paused">Приостановлена</option>
+        </select>
+
+        <button type="submit">Добавить задачу</button>
+    </form>
+
+    <hr>
+
+    <!-- Список задач с возможностью изменить статус -->
+    <h2>Список задач</h2>
+    {% for task in tasks %}
+    <div class="tasks_list">
+        <p>{{ task.task_name }} (Текущий статус: {{ task.get_status_display }})</p>
+
+        <!-- Форма для изменения статуса задачи -->
+        <form method="POST" action="{% url 'change_task_status' task_id=task.task_id %}">
+            {% csrf_token %}
+            <label for="status">Изменить статус:</label>
+            <select id="status" name="status">
+                <option value="created" {% if task.status == 'created' %}selected{% endif %}>Создана</option>
+                <option value="analysis" {% if task.status == 'analysis' %}selected{% endif %}>Анализируется</option>
+                <option value="in_process" {% if task.status == 'in_process' %}selected{% endif %}>В работе</option>
+                <option value="canceled" {% if task.status == 'canceled' %}selected{% endif %}>Отменена</option>
+                <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Выполнена</option>
+                <option value="paused" {% if task.status == 'paused' %}selected{% endif %}>Приостановлена</option>
+            </select>
+            <button type="submit">Изменить статус</button>
+        </form>
+    </div>
+    {% endfor %}
+</body>
+</html>

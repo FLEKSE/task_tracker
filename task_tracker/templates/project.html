@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Проекты</title>
+</head>
+<body>
+    <h1>Список проектов</h1>
+    {% for el in projects %}
+    <div class="projects_list">
+        <a href="{% url 'task_view' project_id=el.project_id %}">{{ el.name }}</a>
+        <p>{{ el.status }}</p>
+    </div>
+    {% endfor %}
+</body>
+</html>
