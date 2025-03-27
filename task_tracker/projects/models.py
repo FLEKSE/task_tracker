@@ -1,36 +1,80 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
 
-class User(models.Model):
-    user_id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
-    role = models.CharField(max_length=255)
-    # project_id = models.ManyToManyField()
-
-
 class Project(models.Model):
-    project_id = models.IntegerField(primary_key=True)
+    STATUS_CHOICES = [
+        ('in_process', 'В процессе'),
+        ('paused', 'Приостановлен'),
+        ('finished', 'Завершен'),
+        ('on_check', 'На проверке'),
+        ('canceled', 'Отменен')
+    ]
+    project_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    creating_date = models.DateTimeField()
-    status = models.CharField(max_length=255)
-    finish_date = models.DateTimeField()
+    creating_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=255, choices=STATUS_CHOICES, default='in_process')
+    finish_date = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Task(models.Model):
-    task_id = models.IntegerField(primary_key=True)
-    task_name = models.CharField()
-    creating_date = models.DateTimeField()
-    # user_id = models.ManyToManyField()
-    status = models.CharField()
-    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
-    finish_date = models.DateTimeField()
+    STATUS_CHOICES = [
+        ('created', 'Создана'),
+        ('analysis', 'Анализируется'),
+        ('in_process', 'В работе'),
+        ('canceled', 'Отменена'),
+        ('completed', 'Выполнена'),
+        ('paused', 'Приостановлена')
+    ]
+    task_id = models.AutoField(primary_key=True)
+    task_name = models.CharField(max_length=255)
+    creating_date = models.DateTimeField(auto_now_add=True)
+    users = models.ManyToManyField('CustomUser', related_name='tasks')
+    status = models.CharField(choices=STATUS_CHOICES, default='created')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
+    finish_date = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.task_name
 
 
 class UnderTask(models.Model):
-    under_task_id = models.IntegerField(primary_key=True)
-    text = models.CharField()
-    task_id = models.ForeignKey(Task, on_delete=models.CASCADE)
-    status = models.CharField()
+    under_task_id = models.AutoField(primary_key=True)
+    text = models.TextField()
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='under_task', null=True, blank=True)
+    status = models.BooleanField()  # передать туда тру или фолс для добавления галочки
+
+
+class CustomUser(AbstractUser):
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('manager', 'Manager'),
+        ('developer', 'Developer'),
+    ]
+
+    projects = models.ManyToManyField(Project, related_name='users', blank=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='developer')
+
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='customuser_set',
+        blank=True,
+        help_text="The groups this user belongs to."
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='customuser_permissions_set',
+        blank=True,
+        help_text="Specific permissions for this user."
+    )
+
+    def __str__(self):
+        return self.username
+
+
+

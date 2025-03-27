@@ -1,0 +1,14 @@
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="Логин" required />
+    <input type="password" name="password" placeholder="Пароль" required />
+    <button type="submit">Зарегистрироваться</button>
+</form>
+<a href="{% url 'login' %}">Уже есть аккаунт?</a>
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="Логин" required />
+    <input type="password" name="password" placeholder="Пароль" required />
+    <button type="submit">Зарегистрироваться</button>
+</form>
+<a href="{% url 'login' %}">Уже есть аккаунт?</a>
