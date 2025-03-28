@@ -16,7 +16,7 @@
                 <img src="{% static '/img/LogoTochka.png' %}" alt="Logo">
                 <h1>Welcome!</h1>
             </div>
-            <!-- Форма для входа -->
+
             <form method="POST" action="{% url 'login' %}">
                 {% csrf_token %}
                 <input type="text" class="input-box" name="username" placeholder="Login" required>

@@ -45,7 +45,7 @@ class UnderTask(models.Model):
     under_task_id = models.AutoField(primary_key=True)
     text = models.TextField()
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='under_task', null=True, blank=True)
-    status = models.BooleanField()  # передать True или False для добавления галочки
+    status = models.BooleanField(default=False)  # передать True или False для добавления галочки
 
     def __str__(self):
         return f"UnderTask {self.under_task_id} for {self.task.task_name}"

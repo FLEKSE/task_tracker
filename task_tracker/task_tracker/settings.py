@@ -72,8 +72,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'task_tracker.wsgi.application'
-LOGIN_REDIRECT_URL = "/"  # Куда перенаправлять после входа
-LOGOUT_REDIRECT_URL = "/login/"  # Куда перенаправлять после выхода
+# LOGIN_REDIRECT_URL = "/"  # Куда перенаправлять после входа
+# LOGOUT_REDIRECT_URL = "/login/"
 
 
 # Database
@@ -130,6 +130,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+LOGIN_URL = 'login'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

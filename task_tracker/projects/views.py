@@ -5,7 +5,8 @@ from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 from .models import CustomUser, Project, Task
-from .forms import ProjectForm
+from .forms import ProjectForm, TaskForm
+from django.contrib.auth.decorators import login_required
 
 
 class CustomLoginView(LoginView):
@@ -39,12 +40,12 @@ class RegisterView(View):
 class CustomLogoutView(LogoutView):
     next_page = reverse_lazy('login')
 
-
+@login_required
 def projects_view(request):
     projects = Project.objects.all()
     return render(request, 'project.html', {'projects': projects})
 
-
+@login_required
 def create_project(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST)
@@ -55,7 +56,7 @@ def create_project(request):
         form = ProjectForm()
     return render(request, 'create_project.html', {'form': form})
 
-
+@login_required
 def change_project_status(request, project_id):
     project = get_object_or_404(Project, project_id=project_id)
     if request.method == 'POST':
@@ -63,38 +64,14 @@ def change_project_status(request, project_id):
         project.status = new_status
         project.save()
         return redirect('projects')
-
-
+@login_required
 def task_view(request, project_id):
     project = get_object_or_404(Project, project_id=project_id)
     tasks = Task.objects.filter(project=project)
-    if request.method == 'POST':
-        task_name = request.POST.get('task_name')
-        status = request.POST.get('status')
-        new_task = Task.objects.create(
-            task_name=task_name,
-            status=status,
-            project=project
-        )
-        return redirect('task_view', project_id=project.project_id)
     return render(request, 'task.html', {'tasks': tasks, 'project': project})
 
 
-def task_view(request, project_id):
-    project = get_object_or_404(Project, project_id=project_id)
-    tasks = Task.objects.filter(project=project)
-    if request.method == 'POST':
-        task_name = request.POST.get('task_name')
-        status = request.POST.get('status')
-        new_task = Task.objects.create(
-            task_name=task_name,
-            status=status,
-            project=project
-        )
-        return redirect('task_view', project_id=project.project_id)
-    return render(request, 'task.html', {'tasks': tasks, 'project': project})
-
-
+@login_required
 def change_task_status(request, task_id):
     task = get_object_or_404(Task, task_id=task_id)
     if request.method == 'POST':
@@ -103,3 +80,17 @@ def change_task_status(request, task_id):
         task.save()
         return redirect('task_view', project_id=task.project.project_id)
     return redirect('task_view', project_id=task.project.project_id)
+
+@login_required
+def create_task(request, project_id):
+    project = get_object_or_404(Project, project_id=project_id)
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.project = project
+            task.save()
+            return redirect('task_view', project_id=project.project_id)
+    else:
+        form = TaskForm()
+    return render(request, 'create_task.html', {'form': form, 'project': project})
