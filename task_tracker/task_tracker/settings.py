@@ -82,9 +82,9 @@ WSGI_APPLICATION = 'task_tracker.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'task_tracker_db',
+        'NAME': 'yourdb',
         'USER': 'postgres',
-        'PASSWORD': 'Soldat102',
+        'PASSWORD': 'yourpassword',
         'HOST': 'localhost',
         'PORT': '',
 
@@ -132,6 +132,7 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_URL = 'login'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

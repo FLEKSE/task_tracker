@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
-from .models import CustomUser, Project, Task
+from .models import CustomUser, Project, Task, UnderTask
 from .forms import ProjectForm, TaskForm
 from django.contrib.auth.decorators import login_required
 
@@ -39,7 +39,7 @@ class RegisterView(View):
 
 class CustomLogoutView(LogoutView):
     next_page = reverse_lazy('login')
-
+    template_name = 'logout.html'
 @login_required
 def projects_view(request):
     projects = Project.objects.all()
@@ -98,3 +98,17 @@ def create_task(request, project_id):
 def task_detail(request, task_id):
     task = get_object_or_404(Task, task_id=task_id)
     return render(request, 'task_detail.html', {'task': task})
+
+
+def task_detail(request, task_id):
+    task = get_object_or_404(Task, task_id=task_id)
+    under_tasks = task.under_task.all()  # Получаем все подзадачи, связанные с задачей
+
+    # Обработка обновления статуса подзадач через форму
+    if request.method == 'POST':
+        for under_task in under_tasks:
+            # Если в POST-запросе есть подзадача с id under_task_<id>, то обновляем её статус
+            under_task.status = f'under_task_{under_task.under_task_id}' in request.POST
+            under_task.save()
+
+    return render(request, 'task_detail.html', {'task': task, 'under_tasks': under_tasks})

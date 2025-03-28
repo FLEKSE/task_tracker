@@ -3,15 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Детали задачи: {{ task.task_name }}</title>
+    <title>Подзадачи: {{ task.task_name }}</title>
+    <style>
+        body {
+            background-color: #1a1a40;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #2a2a5a;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-buttons button {
+            background-color: #4444aa;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .nav-buttons button:hover {
+            background-color: #6666cc;
+        }
+        .create-subtask-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto;
+        }
+        .create-subtask-button:hover {
+            background-color: #34d058;
+        }
+        .task-title {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 24px;
+        }
+        .subtask-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .subtask {
+            background-color: #333366;
+            padding: 15px;
+            width: 80%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .subtask:hover {
+            background-color: #444488;
+        }
+        .subtask input[type="checkbox"] {
+            transform: scale(1.5);
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ task.task_name }}</h1>
-    <p><strong>Статус:</strong> {{ task.get_status_display }}</p>
-    <p><strong>Описание:</strong> {{ task.description }}</p>
-    <p><strong>Дата создания:</strong> {{ task.created_at }}</p>
-    <p><strong>Исполнитель:</strong> {{ task.executor.username }}</p>
+<div class="header">
+    <div class="nav-buttons">
+        <button>Проекты</button>
+        <button>Команды</button>
+    </div>
+    <button class="nav-buttons">О нас</button>
+</div>
 
-    <a href="{% url 'task_view' project_id=task.project.project_id %}">Вернуться к задачам проекта</a>
+<div class="task-title">{{ task.task_name }}</div>
+<button class="create-subtask-button">Создать подзадачу</button>
+
+<div class="subtask-container">
+    <form method="POST">
+        {% csrf_token %}
+        {% for under_task in under_tasks %}
+            <div class="subtask">
+                <input type="checkbox" name="under_task_{{ under_task.under_task_id }}" {% if under_task.status %}checked{% endif %}>
+                <span>{{ under_task.text }}</span>
+            </div>
+        {% endfor %}
+        <button type="submit" class="create-subtask-button">Обновить статус подзадач</button>
+    </form>
+</div>
+
 </body>
 </html>
