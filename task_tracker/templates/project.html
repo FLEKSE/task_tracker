@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/projectPage.css' %}">
+</head>
+
+<div class="navigateMenu">
+    <div class="headerButtons">
+        <a class="headerButton" href="#">Проекты</a>
+        <a class="headerButton" href="#">Команды</a>
+    </div>
+    <div class="aboutDiv">
+        <a class="headerButton" href="#">О нас</a>
+    </div>
+</div>
+
+<div class="createProjectContainer">
+    <a href="{% url 'create_project' %}" class="createProjectButton">Создать проект</a>
+</div>
+
+<div class="projectsContainer">
+    {% for el in projects %}
+    <div class="projectWrapper">
+        <a href="{% url 'task_view' project_id=el.project_id %}" class="projectCard">
+            <h3>{{ el.name }}</h3>
+
+            <div class="status">
+                <span class="{% if el.status == 'in_process' %}statusWorking{% elif el.status == 'paused' %}statusPaused{% elif el.status == 'finished' %}statusCompleted{% endif %}">●</span>
+                <span>{{ el.get_status_display }}</span>
+            </div>
+
+            <div class="lastChanges">
+                <p>Последнее изменение:</p>
+                <span>{{ el.updated_at|default:"--/--/----" }}</span>
+            </div>
+
+            <form method="POST" action="{% url 'change_project_status' project_id=el.project_id %}" id="form-status-{{ el.project_id }}">
+                {% csrf_token %}
+                <label for="status-{{ el.project_id }}">Изменить статус:</label>
+                <select id="status-{{ el.project_id }}" name="status" onchange="document.getElementById('form-status-{{ el.project_id }}').submit();">
+                    <option value="in_process" {% if el.status == 'in_process' %}selected{% endif %}>В процессе</option>
+                    <option value="paused" {% if el.status == 'paused' %}selected{% endif %}>Приостановлен</option>
+                    <option value="finished" {% if el.status == 'finished' %}selected{% endif %}>Завершен</option>
+                    <option value="on_check" {% if el.status == 'on_check' %}selected{% endif %}>На проверке</option>
+                    <option value="canceled" {% if el.status == 'canceled' %}selected{% endif %}>Отменен</option>
+                </select>
+            </form>
+        </a>
+
+        <div class="projectCardBottom">
+            <div class="list">
+                <img class="listImg" src="{% static 'img/list.png' %}" alt="пункт списка"/>
+                <span>Задачи: {{ el.tasks.count }}</span>
+            </div>
+            <div class="list">
+                <img class="listImg" src="{% static 'img/list.png' %}" alt="пункт списка"/>
+                <span>Выполнен на: {{ el.progress }}%</span>
+            </div>
+            <div class="list">
+                <img class="listImg" src="{% static 'img/list.png' %}" alt="пункт списка"/>
+                <span>Разработчиков: {{ el.developers.count }}</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+</body>
+</html>

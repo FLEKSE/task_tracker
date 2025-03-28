@@ -1,0 +1,159 @@
+body {
+    background-color: #1a103d;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+.navigateMenu {
+    display: flex;
+    justify-content: space-between;
+    background: #4d3e87;
+    padding: 15px;
+}
+.headerButtons {
+    display: flex;
+    justify-content: space-around;
+}
+.navigateMenu a {
+    color: white;
+    text-decoration: none;
+    margin: 0 20px;
+    font-size: 18px;
+}
+.projectsUp {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.status {
+    display: flex;
+    justify-content: left;
+    margin: 10px 0;
+}
+.status span {
+    margin-left: 8px;
+}
+.statusWorking {color: lime}
+.statusPaused {color: orange}
+.statusCompleted {color: gray}
+/*.button {*/
+/*    position: absolute;*/
+/*    top: 50%;*/
+/*    transform: translateY(-50%);*/
+/*    background: rgba(255,255,255,0.2);*/
+/*    border: none;*/
+/*    color: white;*/
+/*    padding: 10px;*/
+/*    cursor: pointer;*/
+/*}*/
+.lastChanges{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 8px;
+}
+.projectsBottom {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+
+.imageButton {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-image: url('../img/right_arrow.png');
+    background-size: cover;
+}
+
+.projectLink {
+    text-decoration: none; /* Убираем подчеркивание */
+    color: inherit; /* Наследуем цвет текста */
+    display: block; /* Делаем ссылку блочным элементом */
+    width: fit-content;
+}
+
+
+
+.projectCard:hover {
+    transform: scale(1.05); /* Эффект при наведении */
+    cursor: pointer;
+}
+
+.createProjectContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.createProjectButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.createProjectButton:hover {
+    background-color: #45a049;
+}
+
+
+.projectsContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.projectWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.projectCard {
+    background: black;
+    padding: 20px;
+    border-radius: 10px;
+    width: 280px;
+    color: white;
+    text-align: left;
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.projectCard:hover {
+    transform: scale(1.05);
+}
+
+.projectCardBottom {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 280px;
+    color: black;
+    text-align: left;
+    margin-top: -10px;
+}
+
+.list {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.listImg {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
