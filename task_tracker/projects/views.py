@@ -94,3 +94,7 @@ def create_task(request, project_id):
     else:
         form = TaskForm()
     return render(request, 'create_task.html', {'form': form, 'project': project})
+
+def task_detail(request, task_id):
+    task = get_object_or_404(Task, task_id=task_id)
+    return render(request, 'task_detail.html', {'task': task})

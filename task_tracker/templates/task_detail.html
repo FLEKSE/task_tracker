@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали задачи: {{ task.task_name }}</title>
+</head>
+<body>
+    <h1>{{ task.task_name }}</h1>
+    <p><strong>Статус:</strong> {{ task.get_status_display }}</p>
+    <p><strong>Описание:</strong> {{ task.description }}</p>
+    <p><strong>Дата создания:</strong> {{ task.created_at }}</p>
+    <p><strong>Исполнитель:</strong> {{ task.executor.username }}</p>
+
+    <a href="{% url 'task_view' project_id=task.project.project_id %}">Вернуться к задачам проекта</a>
+</body>
+</html>

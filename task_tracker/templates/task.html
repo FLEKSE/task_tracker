@@ -2,34 +2,142 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Задачи</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проектные задачи</title>
+    <style>
+        body {
+            background-color: #1a1a40;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #2a2a5a;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-buttons button {
+            background-color: #4444aa;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .nav-buttons button:hover {
+            background-color: #6666cc;
+        }
+        .create-task-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto;
+            width: 125px;
+
+
+
+
+        }
+        .create-task-button:hover {
+            background-color: #34d058;
+        }
+        .project-title {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 24px;
+        }
+        .task-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .task {
+            background-color: #333366;
+            padding: 15px;
+            width: 80%;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+        .task:hover {
+            background-color: #444488;
+        }
+        .task-info {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .status {
+            font-weight: bold;
+        }
+        .executor {
+            font-style: italic;
+        }
+        .status-select {
+            background-color: #55aa55;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
-    <h1>Задачи для проекта: {{ project.name }}</h1>
-    <div class="createTaskContainer">
-        <a href="{% url 'create_task' project.project_id %}" class="createTaskButton">Создать задачу</a>
+<div class="header">
+    <div class="nav-buttons">
+        <button >Проекты</button>
+        <button>Команды</button>
     </div>
-    <hr>
+    <button class="nav-buttons">О нас</button>
+</div>
+<div class="project-title">Задачи для проекта: {{ project.name }}</div>
 
-    <h2>Список задач</h2>
+<a href="{% url 'create_task' project.project_id %}" class="create-task-button">Создать задачу</a>
+
+<div class="task-container">
     {% for task in tasks %}
-    <div class="tasks_list">
-        <p>{{ task.task_name }} (Текущий статус: {{ task.get_status_display }})</p>
+        <div class="task">
+            <a href="{% url 'task_detail' task_id=task.task_id %}" class="task-info">
+                <span>{{ task.task_name }}</span>
+                <span class="executor">Исполнитель: {{ task.executor.username }}</span>
+                <span class="status">Статус: {{ task.get_status_display }}</span>
+            </a>
 
-        <form method="POST" action="{% url 'change_task_status' task_id=task.task_id %}" id="form-status-{{ task.task_id }}">
-            {% csrf_token %}
-            <label for="status">Изменить статус:</label>
-            <select id="status-{{ task.task_id }}" name="status" onchange="document.getElementById('form-status-{{ task.task_id }}').submit();">
-                <option value="created" {% if task.status == 'created' %}selected{% endif %}>Создана</option>
-                <option value="analysis" {% if task.status == 'analysis' %}selected{% endif %}>Анализируется</option>
-                <option value="in_process" {% if task.status == 'in_process' %}selected{% endif %}>В работе</option>
-                <option value="canceled" {% if task.status == 'canceled' %}selected{% endif %}>Отменена</option>
-                <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Выполнена</option>
-                <option value="paused" {% if task.status == 'paused' %}selected{% endif %}>Приостановлена</option>
-            </select>
-        </form>
-    </div>
+            <form method="POST" action="{% url 'change_task_status' task_id=task.task_id %}" id="form-status-{{ task.task_id }}">
+                {% csrf_token %}
+                <select class="status-select" name="status" onchange="document.getElementById('form-status-{{ task.task_id }}').submit();">
+                    <option value="created" {% if task.status == 'created' %}selected{% endif %}>Создана</option>
+                    <option value="analysis" {% if task.status == 'analysis' %}selected{% endif %}>Анализируется</option>
+                    <option value="in_process" {% if task.status == 'in_process' %}selected{% endif %}>В работе</option>
+                    <option value="canceled" {% if task.status == 'canceled' %}selected{% endif %}>Отменена</option>
+                    <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Выполнена</option>
+                    <option value="paused" {% if task.status == 'paused' %}selected{% endif %}>Приостановлена</option>
+                </select>
+            </form>
+        </div>
     {% endfor %}
-<p>Project ID: {{ project.id }}</p>
+</div>
 </body>
 </html>
